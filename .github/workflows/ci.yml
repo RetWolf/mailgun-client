@@ -2,7 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 env:
   CARGO_TERM_COLOR: always
@@ -10,7 +14,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
@@ -22,7 +25,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build
         run: cargo build
-      - name: Run tests
+      - name: Run default tests
         run: cargo test
         env:
           MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}

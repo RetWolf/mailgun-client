@@ -1,13 +1,5 @@
+use crate::MailgunClient;
 use serde::{Deserialize, Serialize};
-
-macro_rules! opt_builder {
-    ($field:ident, $field_type:ty) => {
-        pub fn $field(&mut self, $field: $field_type) -> &mut Self {
-            self.$field = Some($field);
-            self
-        }
-    };
-}
 
 #[derive(Serialize, Clone)]
 pub struct MailgunMessage {
@@ -56,4 +48,24 @@ impl MailgunMessage {
 pub struct MessageAPIResponse {
     pub id: String,
     pub message: String,
+}
+
+impl MailgunClient {
+    pub async fn send_email(
+        &self,
+        message: &MailgunMessage,
+    ) -> Result<MessageAPIResponse, reqwest::Error> {
+        let api_endpoint = "messages";
+
+        let client = reqwest::Client::new();
+
+        client
+            .post(format!("{}/{}/{}", &self.base_url, &self.domain, api_endpoint).as_str())
+            .form(&message)
+            .basic_auth("api", Some(&self.api_key))
+            .send()
+            .await?
+            .json::<MessageAPIResponse>()
+            .await
+    }
 }

@@ -1,3 +1,7 @@
+#[macro_use]
+mod common;
+
+pub mod domains;
 pub mod messages;
 
 #[derive(PartialEq)]
@@ -30,28 +34,5 @@ impl MailgunClient {
                 region,
             }
         }
-    }
-
-    fn build_api_url(&self, api_endpoint: &str) -> String {
-        // base_url/domain/api_endpoint
-        format!("{}/{}/{}", &self.base_url, &self.domain, api_endpoint)
-    }
-
-    pub async fn send_email(
-        &self,
-        message: &crate::messages::MailgunMessage,
-    ) -> Result<reqwest::Response, Box<dyn std::error::Error>> {
-        let api_endpoint = "messages";
-
-        let client = reqwest::Client::new();
-
-        let res = client
-            .post(&self.build_api_url(api_endpoint))
-            .form(&message)
-            .basic_auth("api", Some(&self.api_key))
-            .send()
-            .await?;
-
-        Ok(res)
     }
 }
