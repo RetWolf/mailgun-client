@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build
+      - name: Run tests
+        run: cargo test
+        env:
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          EMAIL_TARGET: ${{ secrets.EMAIL_TARGET }}

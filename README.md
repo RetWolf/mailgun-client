@@ -1,3 +1,3 @@
-![GitHub Actions](https://github.com/RetWolf/mailgun-client/workflows/Rust/badge.svg)
+![CI Status](https://github.com/RetWolf/mailgun-client/workflows/CI/badge.svg)
 
 # Mailgun Client Library
