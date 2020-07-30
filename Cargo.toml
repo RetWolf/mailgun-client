@@ -11,3 +11,12 @@ description = "Wrapper for Mailgun v3 API"
 
 [dependencies]
 reqwest = { version = "0.10", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+dotenv = "0.15.0"
+tokio = { version = "0.2", features = ["macros"] }
+
+[[test]]
+name = "integration"
+path = "tests/integration.rs"
